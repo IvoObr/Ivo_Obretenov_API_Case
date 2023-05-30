@@ -47,9 +47,13 @@ app.get('/countries', async (req, res) => {
     .filter(val => val)
 
 
+  countries = countries.sort((a, b) => {
+    const nameA = a.name.common.toLowerCase();
+    const nameB = b.name.common.toLowerCase();
 
-  countries = countries.sort((a, b) => a - b);
-
+    if (sort == 'ascend') return nameA.localeCompare(nameB)
+    if (sort == 'descend') return nameB.localeCompare(nameA)
+  });
 
 
   console.log(countries);
