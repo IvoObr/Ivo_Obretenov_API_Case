@@ -9,7 +9,7 @@ app.get('/countries', async (req, res) => {
 
   console.log( filter, limit, sort, population)
 
-  if (filter && typeof filter !== 'string' || filter.trim() === '') {
+  if (filter && typeof filter !== 'string' || filter?.trim() === '') {
     return res.status(400).json({ error: 'Invalid filter' });
   }
 
@@ -23,16 +23,23 @@ app.get('/countries', async (req, res) => {
   
   if (population) {
     population *= 1000000;
-    console.log('population', population)
   }
 
-  if (sort && typeof sort !== 'string' || sort.trim() === '' || sort !== 'ascend' || sort !== 'descend') {
-    return res.status(400).json({ error: 'Invalid filter' });
+  if (sort && (typeof sort !== 'string' || sort?.trim() === '' || (sort !== 'ascend' && sort !== 'descend'))) {
+    return res.status(400).json({ error: 'Invalid sort' });
   }
 
   const countryFilter = filter ? `name/${filter}` : 'all';
-
-  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/${countryFilter}?fields=name,capital,population,capital,altSpellings,region,languages,latlng,area,landlocked,flag,maps,timezones,flags,coatOfArms`)).data;
+  
+  let countries;
+  try {
+    countries = (await axioshttps.get(`https://restcountries.com/v3.1/${countryFilter}?fields=name,capital,population,capital,altSpellings,region,languages,latlng,area,landlocked,flag,maps,timezones,flags,coatOfArms`)).data;
+  }
+  catch (error) {
+    if (error.response.status == 404) {
+      return res.status(404).json({ error: 'Not Found' });
+    }
+  }
 
   if (filter) {
     countries = countries.map(country => {
@@ -66,7 +73,6 @@ app.get('/countries', async (req, res) => {
 
   res.status(200).send(countries) 
 });
-
 
 
 app.listen(port, () => {
