@@ -1,15 +1,8 @@
-/**
- * Create the endpoint that accept parameters. 
- * Endpoint could accept from 0 to 3 parameters, type string, number, string.
- * Naming is optional. 
- */
-
 const express = require('express');
 const axioshttps = require('axios');
 const app = express();
 const port = 3000;
 
-// Define a route for the root URL
 app.get('/countries', async (req, res) => {
 
   let { filter, limit, sort, population } = req.query;
@@ -28,6 +21,11 @@ app.get('/countries', async (req, res) => {
   }
 
   if (typeof sort === 'string') {
+
+
+   // 'ascend' 'descend' 
+
+
     console.log('sort', sort)
   }
   
@@ -35,13 +33,15 @@ app.get('/countries', async (req, res) => {
   console.log(filter, limit, sort, population);
 
 
-  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}`)).data;
+  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,capital,population`)).data;
 
-  countries = countries.map(countrie => {
-    if (countrie.population <= population) {
-        return countrie;
-    }
-  })
+  countries = countries
+    .map(countrie => (countrie.population <= population) && countrie)
+    .filter(val => val)
+
+  countries = countries.sort((a, b) => a - b);
+
+
 
   console.log(countries);
 
@@ -51,7 +51,8 @@ app.get('/countries', async (req, res) => {
   res.status(200).send(body) 
 });
 
-// Start the server
+
+
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
