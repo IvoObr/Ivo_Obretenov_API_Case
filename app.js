@@ -30,7 +30,7 @@ app.get('/countries', async (req, res) => {
   console.log(filter, limit, sort);
 
 
-  const countries = await axioshttps.get('https://restcountries.com/v3.1/all');
+  const countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}`)).data;
 
   console.log(countries)
 
