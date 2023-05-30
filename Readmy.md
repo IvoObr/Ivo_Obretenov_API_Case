@@ -32,39 +32,19 @@ sort (optional): Sorts the countries in ascending or descending order. Possible 
 population (optional): Filters the countries based on population (in millions).
 Example usage:
 
-http
-GET http://localhost:3000/countries?filter=Germany&sort=descend&limit=5&population=8
+GET: 
 
-Response:
+http://localhost:3000/countries
+http://localhost:3000/countries?filter=Bu
+http://localhost:3000/countries?sort=descend
+http://localhost:3000/countries?limit=40
+http://localhost:3000/countries?population=8
+http://localhost:3000/countries?filter=Bu&population=8
+http://localhost:3000/countries?sort=ascend
+http://localhost:3000/countries?limit=80&sort=ascend
+http://localhost:3000/countries?population=88&limit=20
+http://localhost:3000/countries?filter=Am&limit=20
 
-json
-[
-  {
-    "name": "Germany",
-    "capital": "Berlin",
-    "population": 83149300,
-    "altSpellings": ["DE", "Federal Republic of Germany", "Bundesrepublik Deutschland"],
-    "region": "Europe",
-    "languages": {
-      "deu": "German"
-    },
-    "latlng": [51, 9],
-    "area": 357114,
-    "landlocked": false,
-    "flag": "🇩🇪",
-    "maps": {
-      "googleMaps": "https://goo.gl/maps/DE",
-      "openStreetMaps": "https://www.openstreetmap.org/relation/DE"
-    },
-    "timezones": ["UTC+01:00"],
-    "flags": {
-      "svg": "https://restcountries.com/data/deu.svg",
-      "png": "https://restcountries.com/data/deu.png"
-    },
-    "coatOfArms": "https://restcountries.com/data/deu_coa.png"
-  },
-  // ...
-]
 
 Running Tests
 To run the tests, execute the following command:
