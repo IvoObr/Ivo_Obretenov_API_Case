@@ -17,7 +17,7 @@ app.get('/countries', async (req, res) => {
 
   if (!isNaN(population)) {
     population *= 1000000;
-   console.log('population', population)
+    console.log('population', population)
   }
 
   if (typeof sort === 'string') {
@@ -33,7 +33,8 @@ app.get('/countries', async (req, res) => {
  console.log(filter, limit, sort, population);
 
 
-  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,capital,population,capital,altSpellings,region,languages,latlng,area,landlocked,flag,maps,timezones,flags,coatOfArms`)).data;
+  //let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,capital,population,capital,altSpellings,region,languages,latlng,area,landlocked,flag,maps,timezones,flags,coatOfArms`)).data;
+  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,population`)).data;
 
   countries = countries
     .map(country => {
@@ -56,7 +57,10 @@ app.get('/countries', async (req, res) => {
   });
 
 
-  console.log(countries);
+  countries = countries.splice(0, limit);
+
+
+  console.log('countries 2:', countries);
 
 
 
