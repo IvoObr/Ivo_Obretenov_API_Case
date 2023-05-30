@@ -12,7 +12,7 @@ const port = 3000;
 // Define a route for the root URL
 app.get('/countries', async (req, res) => {
 
-  const { filter, limit, sort } = req.query;
+  let { filter, limit, sort, population } = req.query;
 
   if (typeof filter === 'string') {
     console.log('filter', filter)
@@ -22,17 +22,29 @@ app.get('/countries', async (req, res) => {
     console.log('limit', limit)
   }
 
+  if (!isNaN(population)) {
+    population *= 1000000;
+    console.log('population', population)
+  }
+
   if (typeof sort === 'string') {
     console.log('sort', sort)
   }
   
 
-  console.log(filter, limit, sort);
+  console.log(filter, limit, sort, population);
 
 
-  const countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}`)).data;
+  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}`)).data;
 
-  console.log(countries)
+  countries = countries.map(countrie => {
+    if (countrie.population <= population) {
+        return countrie;
+    }
+  })
+
+  console.log(countries);
+
 
 
   const body = req.query;
