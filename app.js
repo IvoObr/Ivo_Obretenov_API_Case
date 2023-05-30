@@ -8,36 +8,45 @@ app.get('/countries', async (req, res) => {
   let { filter, limit, sort, population } = req.query;
 
   if (typeof filter === 'string') {
-    console.log('filter', filter)
+   console.log('filter', filter)
   }
 
   if (!isNaN(limit)) {
-    console.log('limit', limit)
+   console.log('limit', limit)
   }
 
   if (!isNaN(population)) {
     population *= 1000000;
-    console.log('population', population)
+   console.log('population', population)
   }
 
   if (typeof sort === 'string') {
 
 
-   // 'ascend' 'descend' 
+  //  'ascend' 'descend' 
 
 
-    console.log('sort', sort)
+   console.log('sort', sort)
   }
   
 
-  console.log(filter, limit, sort, population);
+ console.log(filter, limit, sort, population);
 
 
-  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,capital,population`)).data;
+  let countries = (await axioshttps.get(`https://restcountries.com/v3.1/name/${filter}?fields=name,capital,population,capital,altSpellings,region,languages,latlng,area,landlocked,flag,maps,timezones,flags,coatOfArms`)).data;
 
   countries = countries
-    .map(countrie => (countrie.population <= population) && countrie)
+    .map(country => {
+      const isPopulationLess = country.population <= population;
+      const doesNameInclude = (country.name.common.toLowerCase()).includes(filter.toLowerCase());
+
+       if (isPopulationLess && doesNameInclude ){
+        return country
+       }
+    })
     .filter(val => val)
+
+
 
   countries = countries.sort((a, b) => a - b);
 
